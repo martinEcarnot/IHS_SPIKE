@@ -17,8 +17,9 @@ Plateau de phénotypage ARCAD
 
 `python -m venv ihs_spike_env`
 
-Windows : `./ihs_spike_env/Scripts/activate`
-Linx/mac : `source ihs_spike_env/bin/activate`
+**Windows** : `./ihs_spike_env/Scripts/activate`
+
+**Linx/mac** : `source ihs_spike_env/bin/activate`
 
 
 **3)** Install requirements:
