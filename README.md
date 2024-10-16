@@ -26,6 +26,14 @@ Plateau de phénotypage ARCAD
 
 `pip install -r requirements`
 
+## Download models
+
+Download sam models from teh following link
+and add it too your "models" directory.
+
+- model :[sam_b.pt](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth)
+
+
 ## Run
 
 ...
