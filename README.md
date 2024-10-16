@@ -73,7 +73,7 @@ segment_kernels:
 python main.py
 ```
 
-3) wait for your results, hooray !
+3) Wait for your results, hooray !
 
 # Outputs
 
