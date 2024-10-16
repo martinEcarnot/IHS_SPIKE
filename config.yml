@@ -1,0 +1,20 @@
+data:
+    metadata_file: 
+    input_path: /media/clement/Ultra Touch/fourmis/2024-10-11_152915_fourmis24_0810/Fichiers
+    output_path: /home/clement/projects/analyse_images/grains/res
+
+# spectrum :
+
+
+segment_kernels:
+    model_path: /home/clement/projects/analyse_images/grains/models/sam_b.pt
+    output_mask_path: None
+    device: cpu # cuda
+    model_type: vit_b # vit_l
+    area_min: 4000
+    area_max: 15000
+    crop_x_left: 690 
+    crop_x_right: 3470
+
+
+
