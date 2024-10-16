@@ -31,7 +31,7 @@ Euler characteristic of the set of non-zero pixels. Computed as number of connec
 Ratio of pixels in the region to pixels in the total bounding box. Computed as area / (rows * cols)
 
 **feret_diameter_max**
-Maximum Feret’s diameter computed as the longest distance between points around a region’s convex hull contour as determined by find_contours. [5]
+Maximum Feret’s diameter computed as the longest distance between points around a region’s convex hull contour as determined by find_contours.
 
 **filled_area**
 Area of the region with all the holes filled in.
