@@ -4,10 +4,35 @@ Amélioration du post process de chaine de passage d'échantillon SPIKE.
 
 Plateau de phénotypage ARCAD
 
+# Usage
+
+## Install
+
+1) Clone the repository:
+`git clone ...`
+
+
+2) Create a virtual env and activate it:
+
+`python -m venv ihs_spike_env`
+
+`./ihs_spike_env/Scripts/activate`
+
+
+3) Install requirements:
+
+`pip install -r requirements`
+
+## Run
+
+...
 
 
 
-# Kernels properties (*_props.csv) 
+
+# Outputs
+
+## Kernels properties (*_props.csv) 
 
 **area**
 Area of the region i.e. number of pixels of the region scaled by pixel-area.
