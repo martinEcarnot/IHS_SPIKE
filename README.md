@@ -23,13 +23,13 @@ python -m venv ihs_spike_env
 ```
 
 
-**Windows** : 
+activate with *Windows* : 
 ```
 ./ihs_spike_env/Scripts/activate
 ```
 
 
-**Linx/mac** :
+activate with *Linx/mac* :
 ```
 source ihs_spike_env/bin/activate
 ```
