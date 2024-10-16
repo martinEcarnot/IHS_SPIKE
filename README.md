@@ -32,13 +32,29 @@ Download sam models from teh following link
 and add it too your "models" directory.
 
 - model : [sam_b.pt](https://github.com/ultralytics/assets/releases/download/v8.2.0/sam_b.pt)
-  
+
 ## Run
 
-...
+1) Add your files to `data/in` or change the path in the config file: 
 
+```{yml}
+data:
+    metadata_file: 
+    input_path: data/in
+    output_path: data/out
 
+segment_kernels:
+    model_path: models/sam_b.pt
+    output_mask_path: None
+    device: cpu # cuda
+    model_type: vit_b # vit_l
+    area_min: 4000
+    area_max: 15000
+    crop_x_left: 690 
+    crop_x_right: 3470
+```
 
+2) Run the command `python main.py` and the script should start ! 
 
 # Outputs
 
