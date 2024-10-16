@@ -42,7 +42,7 @@ pip install -r requirements
 
 ## Download models
 
-Download sam models from teh following link
+Download [SAM](https://github.com/facebookresearch/segment-anything) models from the following link
 and add it too your "models" directory.
 
 - model : [sam_b.pt](https://github.com/ultralytics/assets/releases/download/v8.2.0/sam_b.pt)
@@ -68,7 +68,12 @@ segment_kernels:
     crop_x_right: 3470
 ```
 
-2) Run the command `python main.py` and the script should start ! 
+2) Run the command
+```
+python main.py
+```
+
+3) wait for your results, hooray !
 
 # Outputs
 
