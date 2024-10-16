@@ -23,15 +23,22 @@ python -m venv ihs_spike_env
 ```
 
 
-**Windows** : ```./ihs_spike_env/Scripts/activate```
+**Windows** : 
+```
+./ihs_spike_env/Scripts/activate
+```
 
 
-**Linx/mac** : ```source ihs_spike_env/bin/activate```
-
+**Linx/mac** :
+```
+source ihs_spike_env/bin/activate
+```
 
 **3)** Install requirements:
 
-`pip install -r requirements`
+```
+pip install -r requirements
+```
 
 ## Download models
 
