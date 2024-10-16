@@ -9,10 +9,11 @@ Plateau de phénotypage ARCAD
 ## Install
 
 1) Clone the repository:
+   
 `git clone ...`
 
 
-2) Create a virtual env and activate it:
+3) Create a virtual env and activate it:
 
 `python -m venv ihs_spike_env`
 
