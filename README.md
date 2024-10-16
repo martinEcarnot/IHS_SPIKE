@@ -31,8 +31,8 @@ Plateau de phénotypage ARCAD
 Download sam models from teh following link
 and add it too your "models" directory.
 
-- model : [sam_b.pt](https://github.com/ultralytics/assets/releases/download/v8.2.0/sam_b.pt](https://github.com/ultralytics/assets/releases/download/v8.2.0/sam_b.pt)
-
+- model : [sam_b.pt](https://github.com/ultralytics/assets/releases/download/v8.2.0/sam_b.pt)
+  
 ## Run
 
 ...
