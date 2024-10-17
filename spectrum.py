@@ -54,7 +54,7 @@ class SpectrumCamera():
         im0 = img[:, 1:id_spectralon, :]
         ret0, binaryImage0 = cv.threshold(im0[:,:,band], thresh_lum*2, im0.max(), cv.THRESH_BINARY)
 
-        # update rgb and get reflectance
+        # update rgb and get reference
         ref = np.zeros((img.shape[0],img.shape[2]),img.dtype)
 
         for x in range(0,img.shape[0]):
@@ -65,7 +65,7 @@ class SpectrumCamera():
 
         imrgb=np.clip(imrgb, a_min=None, a_max=1)
         
-        self.reflectance = ref
+        self.reference = ref
         self.image_rgb = imrgb
 
     def save_rgb(self, output_path: str, sample: str, date: str, hour: str) -> None:
@@ -73,7 +73,7 @@ class SpectrumCamera():
             f"{output_path}/{date}_{hour}_{sample}_rgb.jpg",
             self.image_rgb
         )
-
+        plt.close()
 
 class SpectrumASD():
     def __init__(

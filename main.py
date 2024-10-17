@@ -103,10 +103,18 @@ for hdr_file in files:
 
     # Save regionprops
     kernels.add_regionprops()
+
     kernels.save_rpops(
         output_path=config["data"]["output_path"],
         sample=sample, date=date, hour=hour
     )
+
+    # Save Kernels
+    if config["segment_kernels"]["save_kernels"]:
+        kernels.save_kernels(
+            output_path=config["data"]["output_path"],
+            sample=sample, date=date, hour=hour    
+        )
 
     # ASD
     specasd = SpectrumASD(asd_file)
@@ -116,7 +124,8 @@ for hdr_file in files:
     )
 
     t1samp = time.time()
-    print(f"    > sample time = {round(t1samp-t0samp,0)}s")
+    print(f"    > sample time = {round(t1samp-t0samp,0)} seconds")
+    print(f"    > approx remaining time = {round(((t1samp-t0samp)*(len(files)-n))/3600,2)} hours")
     print("\n")
 
 t1 = time.time()

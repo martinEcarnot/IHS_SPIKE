@@ -11,6 +11,7 @@ hyperspectral data acquistion.
 
 # ===================================
 #       IMPORT
+import os, cv2
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -72,7 +73,7 @@ class Kernels():
         ax.imshow(img)
         plt.axis('off')
         plt.savefig(f"{output_path}/{date}_{hour}_{sample}_masks.jpg",bbox_inches='tight')
-
+        plt.close()
 
     def add_regionprops(self):
         props = list()
@@ -103,3 +104,61 @@ class Kernels():
         
         df = pd.DataFrame(res_list)
         df.to_csv(f"{output_path}/{date}_{hour}_{sample}_props.csv",index=False)
+    
+    def save_kernels(self, output_path: str, sample: str, date: str, hour: str,
+        size: int=320,resize: bool=True) -> None:
+        if not os.path.isdir(f"{output_path}/kernels"):
+            os.mkdir(f"{output_path}/kernels")
+
+        for i, m in enumerate(self.masks):
+            # Float to int
+            img = (self.image_rgb * 255).astype(np.uint8)
+
+            # Mask bool to int
+            mask_int = m['segmentation'].astype(np.uint8)
+
+            # Étendre le masque pour qu'il ait 3 canaux, car l'image est en RGB (3 canaux)
+            mask_rgb = np.repeat(mask_int[:, :, np.newaxis], 3, axis=2)
+
+            # Appliquer le masque sur l'image RGB pour extraire la zone correspondante
+            masked_image = cv2.bitwise_and(img, img, mask=mask_int)
+
+            # Définition de la bounding box (x_min, y_min, largeur, hauteur)
+            x_min = m['bbox'][0]   # Coordonnée x du coin supérieur gauche
+            y_min = m['bbox'][1]   # Coordonnée y du coin supérieur gauche
+            largeur = m['bbox'][2] # Largeur de la boîte
+            hauteur = m['bbox'][3] # Hauteur de la boîte
+
+            add_width = int(round((size-largeur)/2,0))
+            add_height = int(round((size-hauteur)/2,0))
+
+            y1 = y_min-add_height
+            y2 = y_min+hauteur+add_height
+            x1=x_min-add_width
+            x2=x_min+largeur+add_width
+
+            if y1 < 0:
+                y2 = y2+(0-y1)
+                y1 = 0
+
+            im_height = masked_image.shape[0]
+            if y2 > im_height:
+                y1 = y1-(y2-im_height)
+
+            if x1 < 0 :
+                x2 = x2+(0-x1)
+                x1 = 0
+
+            im_length = masked_image.shape[1]
+            if x2 > im_length:
+                x1 = x1-(x2-im_length)
+
+            # Resize for model
+            if resize:
+                res = cv2.resize(masked_image[y1:y2,x1:x2], dsize=(640, 640), interpolation=cv2.INTER_CUBIC)
+                plt.imsave(f'{output_path}/kernels/{date}_{hour}_{sample}_k{i+1}.jpg', res)
+            else:
+                plt.imsave(f'{output_path}/kernels/{date}_{hour}_{sample}_k{i+1}.jpg', masked_image[y1:y2,x1:x2])
+            plt.close()
+
+
