@@ -19,7 +19,7 @@ git clone ...
 **2)** Create a virtual env and activate it:
 
 ```
-python -m venv ihs_spike_env
+python3 -m venv ihs_spike_env
 ```
 
 
@@ -37,7 +37,7 @@ source ihs_spike_env/bin/activate
 **3)** Install requirements:
 
 ```
-pip install -r requirements
+pip install -r requirements.txt
 ```
 
 ## Download models
@@ -53,9 +53,8 @@ and add it too your "models" directory.
 
 ```{yml}
 data:
-    metadata_file: 
-    input_path: data/in
-    output_path: data/out
+    input_path: images/in
+    output_path: images/out
 
 segment_kernels:
     model_path: models/sam_b.pt
@@ -66,6 +65,7 @@ segment_kernels:
     area_max: 15000
     crop_x_left: 690 
     crop_x_right: 3470
+    save_kernels: False
 ```
 
 2) Run the command

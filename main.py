@@ -52,17 +52,18 @@ for hdr_file in files:
     # check files exsits and complete
     asd_file = str(hdr_file).replace("HyperS.hdr", "Spectre01.asd")
     hyspex_file = str(hdr_file).replace(".hdr", ".hyspex")
-    if any([
-        not os.path.exists(asd_file),os.stat(asd_file).st_size < 3e4,
-        not os.path.exists(hyspex_file),os.stat(hyspex_file).st_size < 3e9
-    ]):
-        print("One of ASD or HYSPEX are missing or too small.")
+    if any([not os.path.exists(asd_file),not os.path.exists(hyspex_file)]):
+        print("One of ASD or HYSPEX is missing.")
         print("Starting next file ...")
         continue
-
+    if any([os.stat(asd_file).st_size < 3e4,os.stat(hyspex_file).st_size < 3e9]):
+        print("One of ASD or HYSPEX is too small.")
+        print("Starting next file ...")
+        continue
     # ================================
     #       Spectrum
-    
+    print("import hyperspex...")
+    t0hyp = time.time()
     # Load spectrum
     spectrum = SpectrumCamera(str(hdr_file))
     
@@ -71,7 +72,8 @@ for hdr_file in files:
         output_path=config["data"]["output_path"],
         sample=sample, date=date, hour=hour
     )
-    
+    t1hyp = time.time()
+    print(f"    > import hyperspex = {round(t1hyp-t0hyp, 0)}s")
     # ================================
     #      Kernels Segmentation
     
@@ -129,4 +131,4 @@ for hdr_file in files:
     print("\n")
 
 t1 = time.time()
-print(f"All process done in {t1-t0} seconds.")
+print(f"All process done in {round((t1-t0)/3600,2)} hours.")
