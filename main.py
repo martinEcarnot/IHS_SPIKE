@@ -68,10 +68,16 @@ for hdr_file in files:
     spectrum = SpectrumCamera(str(hdr_file))
     
     # Save rgb image
-    spectrum.save_rgb(
-        output_path=config["data"]["output_path"],
-        sample=sample, date=date, hour=hour
-    )
+    try :
+        spectrum.save_rgb(
+            output_path=config["data"]["output_path"],
+            sample=sample, date=date, hour=hour
+        )
+    except ValueError as error:
+        print(f"!!ERREUR!! : {error}")
+        print(f"next file ... \n")
+        continue
+
     t1hyp = time.time()
     print(f"    > import hyperspex = {round(t1hyp-t0hyp, 0)}s")
     # ================================
