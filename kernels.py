@@ -1,5 +1,5 @@
 """
-File: lernels.py
+File: Klernels.py
 Authors: Clement Plessis - Martin Ecarnot
 Date: 11 Oct. 2024
 Description: This script is part of the IHS SPIKE project 
@@ -92,16 +92,30 @@ class Kernels():
         )
         res_list = list()
         for i, props in enumerate(self.rprops):
+            
+            mask = self.masks[i]["segmentation"]
+            img = self.image_rgb
+            b, g, r = cv2.split(img)
+            
             i_dict = dict(
                 date = date,
                 hour = hour,
                 sample = sample,
                 kernel = i+1,
+                blue_min = np.min(b[mask]),
+                blue_mean = np.mean(b[mask]),
+                blue_max = np.max(b[mask]),
+                green_min = np.min(g[mask]),
+                green_mean = np.mean(g[mask]),
+                green_max = np.max(g[mask]),
+                red_min = np.min(r[mask]),
+                red_mean = np.mean(r[mask]),
+                red_max = np.max(r[mask])
             )
             for key in attrok:
                 i_dict[key] = props[key]
             res_list.append(i_dict)
-        
+
         df = pd.DataFrame(res_list)
         df.to_csv(f"{output_path}/{date}_{hour}_{sample}_props.csv",index=False)
     
