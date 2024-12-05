@@ -15,7 +15,6 @@ from segment_anything import sam_model_registry
 from kernels import Kernels
 from spectrum import SpectrumCamera, SpectrumASD
 
-
 # ================================
 #       PARAMETERS
 config = yaml.load(open('config.yml', 'r'), Loader=yaml.SafeLoader)
@@ -31,6 +30,8 @@ sam.to(device=config["segment_kernels"]["device"])
 #       PROCESS FILES
 print(f"\nProcessing files from {config['data']['input_path']}\n")
 files = [i for i in Path(config["data"]["input_path"]).glob("*.hdr")]
+# files = [i for i in Path(config["data"]["input_path"]).rglob("*.hdr")]
+# files=files[167:len(files)]
 
 t0 = time.time()
 n=0
@@ -104,34 +105,48 @@ for hdr_file in files:
     print("number of masks AFTER filtering : ", len(kernels.masks))
 
     # Save masks
+    print("saving masks...")
+    t0smask = time.time()
     kernels.save_masks(
         output_path=config["data"]["output_path"],
         sample=sample, date=date, hour=hour
     )
+    t1smask = time.time()
+    print(f"    > rprops time = {round(t1smask - t0smask, 0)}s")
 
     # Save regionprops
+    print("adding region props...")
+    t0rpro = time.time()
     kernels.add_regionprops()
 
     kernels.save_rpops(
         output_path=config["data"]["output_path"],
         sample=sample, date=date, hour=hour
     )
+    t1rpro = time.time()
+    print(f"    > rprops time = {round(t1rpro - t0rpro, 0)}s")
 
     # Save Kernels
     if config["segment_kernels"]["save_kernels"]:
+        print("saving kernels images...")
         kernels.save_kernels(
             output_path=config["data"]["output_path"],
             sample=sample, date=date, hour=hour    
         )
 
     # ASD
+    print("read spectrum ASD ...")
+    t0spec = time.time()
     specasd = SpectrumASD(asd_file)
     specasd.save_spectrum(
         output_path=config["data"]["output_path"],
         sample=sample, date=date, hour=hour
     )
+    t1spec = time.time()
+    print(f"    > spec time = {round(t1spec-t0spec, 0)}s")
 
     t1samp = time.time()
+    print("total time :")
     print(f"    > sample time = {round(t1samp-t0samp,0)} seconds")
     print(f"    > approx remaining time = {round(((t1samp-t0samp)*(len(files)-n))/3600,2)} hours")
     print("\n")
