@@ -67,6 +67,7 @@ class SpectrumCamera():
         
         self.reference = ref
         self.image_rgb = imrgb
+        self.img = img
 
     def save_rgb(self, output_path: str, sample: str, date: str, hour: str) -> None:
         plt.imsave(

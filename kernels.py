@@ -176,3 +176,45 @@ class Kernels():
             plt.close()
 
 
+    def save_Kernelspectra(self, ihsr, sample: str, date: str, hour: str):
+        #if not os.path.isdir(f"{output_path}/kernels"):
+        #   os.mkdir(f"{output_path}/kernels")
+
+        #sp = np.empty((0, ihsr.shape[2] + 3)).astype(np.int16)  # np.empty((len(o),img.shape[2]))
+        sp=list()
+        dep = np.reshape(ihsr, (ihsr.shape[0] * ihsr.shape[1], ihsr.shape[2]))  # unfolded image
+
+        for i,m in enumerate(self.masks):     #kernels.masks[0:10]): #
+            # Coordinates of pixels of the mask
+            xy_coords = np.flip(np.column_stack(np.where(m["segmentation"] > 0)))
+
+            # Coord of grains pixels in unfolded image
+            id = np.ravel_multi_index(np.transpose(xy_coords),(ihsr.shape[1], ihsr.shape[0]))
+
+            # Fill sp with coordinates and spectra
+            sp1 = np.array([dep[j, :] for j in id]).astype(np.int16)
+            spcoord = np.concatenate((np.matlib.repmat(i + 1, len(id), 1),xy_coords, sp1),axis=1).astype(np.int16)
+            sp.append(spcoord)
+        self.kspectra = sp
+            #sp = np.concatenate((sp, spcoord))
+
+    def RebuildFromSpectra(self):
+        # Définir les dimensions des matrices
+        imred = np.ones((sp[:, 2].max(), sp[:, 1].max()))  # Matrice initialisée à 1
+        imgr = np.zeros((sp[:, 2].max(), sp[:, 1].max()))  # Matrice initialisée à 0
+        imbl = np.zeros((sp[:, 2].max(), sp[:, 1].max()))  # Matrice initialisée à 0
+
+        # Remplir les matrices
+        for i in range(sp.shape[0]):
+            # Remplir les canaux R, G, et B
+            imred[int(sp[i, 2]) - 1, int(sp[i, 1]) - 1] = sp[i, 82]  # Attention à l'indice Python (0-based)
+            imgr[int(sp[i, 2]) - 1, int(sp[i, 1]) - 1] = sp[i, 54]
+            imbl[int(sp[i, 2]) - 1, int(sp[i, 1]) - 1] = sp[i, 14]
+
+        # Créer une image RGB en combinant les matrices
+        imrgb = np.stack((imred, imgr, imbl), axis=2)
+
+        # Afficher l'image
+        plt.imshow(imrgb)  # Conversion en entier si nécessaire
+        plt.axis('off')
+        plt.show()

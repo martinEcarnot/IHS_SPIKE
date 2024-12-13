@@ -112,7 +112,7 @@ for hdr_file in files:
         sample=sample, date=date, hour=hour
     )
     t1smask = time.time()
-    print(f"    > rprops time = {round(t1smask - t0smask, 0)}s")
+    print(f"    > smasks time = {round(t1smask - t0smask, 0)}s")
 
     # Save regionprops
     print("adding region props...")
