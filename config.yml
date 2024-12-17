@@ -1,6 +1,6 @@
 data:
     input_path: F:\2024-10-19_105240_bb24-2\Fichiers #F:\fourmis\IHS_SPIKE_fourmis24\data\epis_preda
-    output_path: F:\fourmis\IHS_SPIKE_fourmis24\results\epis_preda
+    output_path: F:\2024-10-19_105240_bb24-2\Fichiers\output #F:\fourmis\IHS_SPIKE_fourmis24\results\epis_preda
 
 segment_kernels:
     model_path: models/sam_b.pt

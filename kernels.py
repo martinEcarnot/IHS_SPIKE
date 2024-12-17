@@ -15,8 +15,11 @@ import os, cv2
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('TkAgg')
 from segment_anything import SamAutomaticMaskGenerator, modeling
 from skimage.measure import regionprops
+import gzip
 
 # ===================================
 #       CLASS
@@ -175,28 +178,44 @@ class Kernels():
                 plt.imsave(f'{output_path}/kernels/{date}_{hour}_{sample}_k{i+1}.jpg', masked_image[y1:y2,x1:x2])
             plt.close()
 
+    # def save_Kernelspectra(self, ihsr, output_path: str, sample: str, date: str, hour: str):
+    #     print(f"ihsr: {ihsr}, output_path: {output_path}, sample: {sample}, date: {date}, hour: {hour}")
 
-    def save_Kernelspectra(self, ihsr, sample: str, date: str, hour: str):
-        #if not os.path.isdir(f"{output_path}/kernels"):
-        #   os.mkdir(f"{output_path}/kernels")
+    def save_Kernelspectra(self, ihsr, ref, output_path: str, sample: str, date: str, hour: str):
 
-        #sp = np.empty((0, ihsr.shape[2] + 3)).astype(np.int16)  # np.empty((len(o),img.shape[2]))
-        sp=list()
+        sp = np.empty((0,ihsr.shape[2]+3)).astype(np.int16)
+        spm = np.empty((0,ihsr.shape[2]+3))
         dep = np.reshape(ihsr, (ihsr.shape[0] * ihsr.shape[1], ihsr.shape[2]))  # unfolded image
 
-        for i,m in enumerate(self.masks):     #kernels.masks[0:10]): #
+        for i,m in enumerate(self.masks):
             # Coordinates of pixels of the mask
-            xy_coords = np.flip(np.column_stack(np.where(m["segmentation"] > 0)))
+            xy_coords = np.column_stack(np.where(m["segmentation"] > 0))
 
             # Coord of grains pixels in unfolded image
-            id = np.ravel_multi_index(np.transpose(xy_coords),(ihsr.shape[1], ihsr.shape[0]))
+            id = np.ravel_multi_index(np.transpose(xy_coords),(ihsr.shape[0], ihsr.shape[1]))
 
-            # Fill sp with coordinates and spectra
+            # Fill sp with coodinates and spectra
             sp1 = np.array([dep[j, :] for j in id]).astype(np.int16)
-            spcoord = np.concatenate((np.matlib.repmat(i + 1, len(id), 1),xy_coords, sp1),axis=1).astype(np.int16)
-            sp.append(spcoord)
-        self.kspectra = sp
-            #sp = np.concatenate((sp, spcoord))
+            spcoord = np.concatenate((np.full((len(id), 1), i + 1),xy_coords, sp1),axis=1).astype(np.int16)
+            sp = np.concatenate((sp, spcoord)) # Mandatory of (())
+
+            # Convert to reflectance then average
+            spcoord=spcoord.astype(np.float64)
+            for j in range(ref.shape[0]):  # Parcours de chaque ligne de spref
+                iok = spcoord[:, 1] == j  # Trouver les lignes correspondant à la ligne j dans sp
+                if np.any(iok):  # Si des correspondances existent
+                     spcoord[iok, 3:] = spcoord[iok, 3:] / ref[j, :][np.newaxis, :]  # Normalisation des spectres
+
+            spm = np.vstack((spm, spcoord.mean(axis=0)))
+
+        with gzip.GzipFile(f"{output_path}/{date}_{hour}_{sample}_sp_allpx.gz", "wb") as f:
+            np.save(f, sp)
+
+        with gzip.GzipFile(f"{output_path}/{date}_{hour}_{sample}_sp.gz", "wb") as f:
+            np.save(f, spm)
+
+        with gzip.GzipFile(f"{output_path}/{date}_{hour}_{sample}_ref.gz", "wb") as f:
+            np.save(f, ref)
 
     def RebuildFromSpectra(self):
         # Définir les dimensions des matrices

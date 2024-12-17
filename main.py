@@ -67,7 +67,7 @@ for hdr_file in files:
     t0hyp = time.time()
     # Load spectrum
     spectrum = SpectrumCamera(str(hdr_file))
-    
+
     # Save rgb image
     try :
         spectrum.save_rgb(
@@ -133,6 +133,15 @@ for hdr_file in files:
             output_path=config["data"]["output_path"],
             sample=sample, date=date, hour=hour    
         )
+
+    # Save kernel spectra
+    print("saving kernels spectra...")
+    kernels.save_Kernelspectra(
+        ihsr=spectrum.img[:,config["segment_kernels"]["crop_x_left"]:config["segment_kernels"]["crop_x_right"],:],
+        output_path=config["data"]["output_path"],
+        sample=sample, date=date, hour=hour,
+        ref=spectrum.reference
+    )
 
     # ASD
     print("read spectrum ASD ...")
