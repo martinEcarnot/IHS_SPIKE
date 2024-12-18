@@ -25,7 +25,8 @@ class SpectrumCamera():
         id_spectralon: int = 300,
         id_im_grains: tuple = (710,3460),
         thresh_lum: float = 0.11,  # 0.07 for wheat #1800 # threshold of reflectance (or light intensity) to remove background
-        band: int = 100,  # spectral band to extract (#100 : 681 nm)
+        band: int = 100,  # spectral bands to extract (#100 : 681 nm)
+        bands: tuple = (82, 150, 200),  # spectral bands for segmentation
         rgb: tuple = (82, 54, 14)
         ):
         
@@ -40,6 +41,7 @@ class SpectrumCamera():
         self.id_im_grains = id_im_grains
         self.thresh_lum = thresh_lum
         self.band = band
+        self.bands = bands
         self.rgb = rgb
 
         #-------------------

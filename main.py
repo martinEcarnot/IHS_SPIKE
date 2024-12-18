@@ -14,6 +14,7 @@ from pathlib import Path
 from segment_anything import sam_model_registry
 from kernels import Kernels
 from spectrum import SpectrumCamera, SpectrumASD
+import numpy as np
 
 # ================================
 #       PARAMETERS
@@ -35,6 +36,8 @@ files = [i for i in Path(config["data"]["input_path"]).glob("*.hdr")]
 
 t0 = time.time()
 n=0
+files=files[0:3]
+hdr_file=files[0]
 for hdr_file in files:
     # ================================
     #           INIT
@@ -88,7 +91,7 @@ for hdr_file in files:
     print("segmentation...")
     t0seg = time.time()
     kernels = Kernels(
-        image_rgb=spectrum.image_rgb,
+        image_rgb=np.divide(spectrum.img[:,:,spectrum.bands],2**15),  #spectrum.image_rgb
         sam_model=sam,
         crop_x_left = config["segment_kernels"]["crop_x_left"],
         crop_x_right = config["segment_kernels"]["crop_x_right"] 
