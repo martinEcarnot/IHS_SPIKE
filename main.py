@@ -30,18 +30,19 @@ sam.to(device=config["segment_kernels"]["device"])
 # ================================
 #       PROCESS FILES
 print(f"\nProcessing files from {config['data']['input_path']}\n")
-files = [i for i in Path(config["data"]["input_path"]).glob("*.hdr")]
+files = [i for i in Path(config["data"]["input_path"]).rglob("*.hdr")]
+#files=files[72:len(files)]
 # files = [i for i in Path(config["data"]["input_path"]).rglob("*.hdr")]
 # files=files[167:len(files)]
 
 t0 = time.time()
 n=0
-files=files[0:3]
-hdr_file=files[0]
+
 for hdr_file in files:
     # ================================
     #           INIT
     n+=1
+    asd_exist=True
     t0samp = time.time()
     print(f"progress {n}/{len(files)}")
     date = hdr_file.stem.split("_")[0]
@@ -59,7 +60,7 @@ for hdr_file in files:
     if any([not os.path.exists(asd_file),not os.path.exists(hyspex_file)]):
         print("One of ASD or HYSPEX is missing.")
         print("Starting next file ...")
-        continue
+        asd_exist=False
     if any([os.stat(asd_file).st_size < 3e4,os.stat(hyspex_file).st_size < 3e9]):
         print("One of ASD or HYSPEX is too small.")
         print("Starting next file ...")
@@ -147,21 +148,22 @@ for hdr_file in files:
     )
 
     # ASD
-    print("read spectrum ASD ...")
-    t0spec = time.time()
-    specasd = SpectrumASD(asd_file)
-    specasd.save_spectrum(
-        output_path=config["data"]["output_path"],
-        sample=sample, date=date, hour=hour
-    )
-    t1spec = time.time()
-    print(f"    > spec time = {round(t1spec-t0spec, 0)}s")
+    if asd_exist:
+        print("read spectrum ASD ...")
+        t0spec = time.time()
+        specasd = SpectrumASD(asd_file)
+        specasd.save_spectrum(
+            output_path=config["data"]["output_path"],
+            sample=sample, date=date, hour=hour
+        )
+        t1spec = time.time()
+        print(f"    > spec time = {round(t1spec-t0spec, 0)}s")
 
-    t1samp = time.time()
-    print("total time :")
-    print(f"    > sample time = {round(t1samp-t0samp,0)} seconds")
-    print(f"    > approx remaining time = {round(((t1samp-t0samp)*(len(files)-n))/3600,2)} hours")
-    print("\n")
+        t1samp = time.time()
+        print("total time :")
+        print(f"    > sample time = {round(t1samp-t0samp,0)} seconds")
+        print(f"    > approx remaining time = {round(((t1samp-t0samp)*(len(files)-n))/3600,2)} hours")
+        print("\n")
 
 t1 = time.time()
 print(f"All process done in {round((t1-t0)/3600,2)} hours.")
