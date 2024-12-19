@@ -50,7 +50,10 @@ class SpectrumCamera():
 
         img = np.array(img.load(),dtype=np.int16)
         img = np.transpose(img, (1, 0, 2))
+        # Set saturated pixels (which show negatives) to zero
+        img[img < 0] = 0
         imrgb = img[:,:,rgb].astype('float')
+
 
         # Detect and extract spectralon
         im0 = img[:, 1:id_spectralon, :]
