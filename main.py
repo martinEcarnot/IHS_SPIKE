@@ -31,13 +31,12 @@ sam.to(device=config["segment_kernels"]["device"])
 #       PROCESS FILES
 print(f"\nProcessing files from {config['data']['input_path']}\n")
 files = [i for i in Path(config["data"]["input_path"]).rglob("*.hdr")]
-#files=files[72:len(files)]
+#files=files[83:len(files)]
 # files = [i for i in Path(config["data"]["input_path"]).rglob("*.hdr")]
 # files=files[167:len(files)]
 
 t0 = time.time()
 n=0
-
 for hdr_file in files:
     # ================================
     #           INIT
@@ -59,10 +58,10 @@ for hdr_file in files:
     hyspex_file = str(hdr_file).replace(".hdr", ".hyspex")
     if any([not os.path.exists(asd_file),not os.path.exists(hyspex_file)]):
         print("One of ASD or HYSPEX is missing.")
-        print("Starting next file ...")
+        print("Skipping the missing element ...")
         asd_exist=False
-    if any([os.stat(asd_file).st_size < 3e4,os.stat(hyspex_file).st_size < 3e9]):
-        print("One of ASD or HYSPEX is too small.")
+    if os.stat(hyspex_file).st_size < 3e8: #any([os.stat(asd_file).st_size < 3e4,os.stat(hyspex_file).st_size < 3e9]):
+        print("HYSPEX is too small.")  # print("One of ASD or HYSPEX is too small.")
         print("Starting next file ...")
         continue
     # ================================
@@ -156,14 +155,15 @@ for hdr_file in files:
             output_path=config["data"]["output_path"],
             sample=sample, date=date, hour=hour
         )
-        t1spec = time.time()
-        print(f"    > spec time = {round(t1spec-t0spec, 0)}s")
 
-        t1samp = time.time()
-        print("total time :")
-        print(f"    > sample time = {round(t1samp-t0samp,0)} seconds")
-        print(f"    > approx remaining time = {round(((t1samp-t0samp)*(len(files)-n))/3600,2)} hours")
-        print("\n")
+    t1spec = time.time()
+    print(f"    > spec time = {round(t1spec-t0spec, 0)}s")
+
+    t1samp = time.time()
+    print("total time :")
+    print(f"    > sample time = {round(t1samp-t0samp,0)} seconds")
+    print(f"    > approx remaining time = {round(((t1samp-t0samp)*(len(files)-n))/3600,2)} hours")
+    print("\n")
 
 t1 = time.time()
 print(f"All process done in {round((t1-t0)/3600,2)} hours.")
