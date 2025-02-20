@@ -7,8 +7,8 @@ segment_kernels:
     output_mask_path: None
     device: cpu # cuda
     model_type: vit_b # vit_l
-    area_min: 1000 # 4000
-    area_max: 3750 #15000
+    area_min: 700 # 4000
+    area_max: 5000 #15000
     crop_x_left:  400 # 690
     crop_x_right: 1800 #3470
     save_kernels: False # save rgb image for each kernel or not

@@ -206,6 +206,13 @@ for filename in filelist[0:filelist.__len__()]: #os.listdir(PATH)[27:187]:
 
 # Image NEO HYPSEX 2048
 # Papier milimetré:
-#     en y: y75 à y1900, = 1825 pixels pour 80 mm (8 carreaux). Soit 0.0438 mm/pixel
-#     en x: x512 à x833, = 318 pixels pour 15 mm . Soit 0.467 mm/pixel
-#     moyenne= 0.0453 mm/pixel
+#     en y: y75 à y1900, = 1825 pixels pour 80 mm (8 carreaux). Soit 0.044 mm/pixel
+#     en x: x512 à x833, = 318 pixels pour 15 mm . Soit 0.047 mm/pixel
+#     moyenne= 0.0455 mm/pixel
+#       Surface d'un pixel = 0.00207025 mm2
+#
+#Avec binning 2x (1024 pixels/ligne):
+#     en y: 0.088 mm/pixel
+#     en x: 0.094 mm/pixel
+#     moyenne= 0.091 mm/pixel
+#       Surface d'un pixel = 0.008281 mm2
